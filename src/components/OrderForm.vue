@@ -544,7 +544,7 @@ export default Vue.extend({
           ...(this.phone && { phone: this.phone }),
           ...(this.isSelectedRaces && { races: this.racesSelected.map((race: Race) => race.id)}),
           ...(this.isSelectedRelays && { relays: this.relaysSelected.map((relay: Relay) => relay.id) }),
-          ...(this.isSelectedCryatlons && { cryatlon_id: this.cryatlonsSelected[0].id }),
+          ...(this.isSelectedCryatlons && { cryatlons: this.cryatlonsSelected.map((cryatlon: Cryatlon) => cryatlon.id) }),
           ...(this.additional && { additional: this.additional })
         }
 

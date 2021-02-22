@@ -12,6 +12,6 @@ export interface CreateOrderDTO {
     phone?: string;
     races?: number[];
     relays?: number[];
-    cryatlon_id?: number;
+    cryatlons?: number[];
     additional?: string;
 }

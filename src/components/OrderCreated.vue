@@ -4,7 +4,7 @@
       <v-card class="pa-4 my-10" width="800">
         <v-card-title class="mb-6">
           <h2 class="font-weight-black">
-            Заявка усшено создана!
+            Заявка успешно создана!
           </h2>
         </v-card-title>
         <v-card-subtitle>
