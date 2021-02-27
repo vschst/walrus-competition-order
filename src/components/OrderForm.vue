@@ -144,11 +144,17 @@
                 v-model="phone"
                 label="Телефон"
                 hint="Телефон участника."
-                class="mb-6"
+                class="mb-4"
                 persistent-hint
                 clearable
                 filled
             ></v-text-field>
+            <v-checkbox
+                v-model="needSkis"
+                label="Нужны лыжи"
+                class="mb-6"
+                required
+            ></v-checkbox>
             <h3 class="font-weight-medium mb-4">
               Участие в соревнованиях
             </h3>
@@ -329,6 +335,7 @@ export default Vue.extend({
         }
       ],
       phone: '',
+      needSkis: false,
       distancesHeaders: [
         {
           text: 'Название',
@@ -541,6 +548,7 @@ export default Vue.extend({
           birthdate: this.birthdate || '',
           gender: this.gender,
           email: this.email,
+          need_skis: this.needSkis,
           ...(this.phone && { phone: this.phone }),
           ...(this.isSelectedRaces && { races: this.racesSelected.map((race: Race) => race.id)}),
           ...(this.isSelectedRelays && { relays: this.relaysSelected.map((relay: Relay) => relay.id) }),

@@ -10,6 +10,7 @@ export interface CreateOrderDTO {
     gender: string;
     email: string;
     phone?: string;
+    need_skis: boolean;
     races?: number[];
     relays?: number[];
     cryatlons?: number[];
