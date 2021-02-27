@@ -1,3 +1,11 @@
+export const getFullName = (
+    lastName: string,
+    firstName: string,
+    middleName: null | string
+): string => {
+    return lastName + " " + firstName + (middleName ? " " + middleName : "");
+};
+
 export const getGenderText = (gender: string): string => {
     switch (gender) {
         case "male":

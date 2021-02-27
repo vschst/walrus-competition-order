@@ -191,20 +191,20 @@
                     show-select
                     class="elevation-1 mb-6"
                     :items-per-page="5"
-                  >
-                    <template #item.swimming_style="{ item }">
-                      {{ getSwimmingStyleText(item.swimming_style) }}
-                    </template>
-                    <template #item.gender="{ item }">
-                      {{ getGenderText(item.gender) }}
-                    </template>
-                    <template #item.age_group="{ item }">
-                      {{ getAgeGroupText(item.min_age, item.max_age) }}
-                    </template>
-                    <template #item.date="{ item }">
-                      {{ getFormattedDate(item.date) }}
-                    </template>
-                  </v-data-table>
+                >
+                  <template #item.swimming_style="{ item }">
+                    {{ getSwimmingStyleText(item.swimming_style) }}
+                  </template>
+                  <template #item.gender="{ item }">
+                    {{ getGenderText(item.gender) }}
+                  </template>
+                  <template #item.age_group="{ item }">
+                    {{ getAgeGroupText(item.min_age, item.max_age) }}
+                  </template>
+                  <template #item.date="{ item }">
+                    {{ getFormattedDate(item.date) }}
+                  </template>
+                </v-data-table>
                 <h3 class="font-weight-medium mb-4">
                   Выбранные эстафеты
                 </h3>
@@ -471,8 +471,8 @@ export default Vue.extend({
       return this.races.filter((race: Race) => {
         return (race.gender === 'all' || race.gender === this.gender) &&
             (this.isParaSwimmer ? this.isParaSwimmer === race.para_swimmers : true) &&
-              ((this.birthdate && race.min_age) ? (this.age >= race.min_age) : true) &&
-                ((this.birthdate && race.max_age) ? (this.age <= race.max_age) : true)
+            ((this.birthdate && race.min_age) ? (this.age >= race.min_age) : true) &&
+            ((this.birthdate && race.max_age) ? (this.age <= race.max_age) : true)
       })
     },
     filteredCryatlons(this: any) {

@@ -1,36 +1,26 @@
 <template>
-  <v-app id="order-app">
-    <order-created v-if="isOrderCreated"/>
-    <order-form v-else/>
+  <v-app id="app">
+    <navbar/>
+    <v-main>
+      <router-view/>
+    </v-main>
   </v-app>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import OrderCreated from "./components/OrderCreated.vue";
-import OrderForm from './components/OrderForm.vue';
+import Vue from 'vue'
+import Navbar from "@/components/Navbar.vue";
 
 export default Vue.extend({
-  name: 'App',
   components: {
-    OrderCreated,
-    OrderForm
-  },
-  data() {
-    return {
-      isOrderCreated: false
-    }
-  },
-  mounted() {
-    this.$root.$on('onOrderCreatedSuccessfully', () => {
-      this.isOrderCreated = true
-    })
+    Navbar
   }
-});
+})
 </script>
 
 <style lang="scss">
-#order-app {
+#app {
   background: #0E0E2C;
+  color: #2c3e50;
 }
 </style>
