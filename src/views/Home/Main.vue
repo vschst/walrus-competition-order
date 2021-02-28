@@ -51,7 +51,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import OrderStatus from '@/components/OrderStatus.vue'
-import { Competitions } from "@/api";
+import { Competitions } from '@/api'
+import { Orders } from "@/api";
 import { getFullName } from "@/utils/members";
 import { Order } from "./interfaces/order.interface";
 
@@ -64,6 +65,7 @@ export default Vue.extend({
     return {
       isLoading: true,
       competition: {
+        id: null,
         name: '',
         description: null
       },
@@ -105,10 +107,15 @@ export default Vue.extend({
     getFullName,
     async loadCompetitionOrdersData() {
       try {
-        const { data } = await Competitions.getCompetitionPublicOrders()
+        const response = await Promise.all([
+          Competitions.getCompetitionData(),
+          Orders.getPublicOrders()
+        ])
+        const { data: competition } = response[0]
+        const { data: orders } = response[1]
+        const { id, name, description } = competition
 
-        const { name, description, orders } = data
-
+        this.competition.id = id
         this.competition.name = name
         this.competition.description = description
         this.orders = orders

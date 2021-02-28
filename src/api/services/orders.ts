@@ -1,3 +1,4 @@
+import { COMPETITION_ID } from "@/config/api";
 import { request } from "../axios";
 import { CreateOrderDTO } from "../dto/create-order.dto";
 
@@ -12,6 +13,14 @@ const createOrder = async (data: CreateOrderDTO) => {
     );
 }
 
+const getPublicOrders = async () => {
+    return await request({
+        url: `/orders/public/${COMPETITION_ID}`,
+        method: 'GET'
+    })
+}
+
 export default {
-    createOrder
+    createOrder,
+    getPublicOrders
 }

@@ -8,14 +8,6 @@ const getCompetitionData = async () => {
     })
 }
 
-const getCompetitionPublicOrders = async () => {
-    return await request({
-        url: `/competitions/public/orders/${COMPETITION_ID}`,
-        method: 'GET'
-    })
-}
-
 export default {
-    getCompetitionData,
-    getCompetitionPublicOrders
+    getCompetitionData
 }
