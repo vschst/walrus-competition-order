@@ -1,6 +1,6 @@
 export const getSwimmingStyleText = (swimmingStyle: string): string => {
     switch (swimmingStyle) {
-        case 'reaststroke':
+        case 'breaststroke':
             return 'Брасс';
         case 'butterfly':
             return 'Баттерфляй';
