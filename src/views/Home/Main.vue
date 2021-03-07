@@ -101,11 +101,11 @@ export default Vue.extend({
     }
   },
   async mounted() {
-    await this.loadCompetitionOrdersData()
+    await this.loadOrdersData()
   },
   methods: {
     getFullName,
-    async loadCompetitionOrdersData() {
+    async loadOrdersData() {
       try {
         const response = await Promise.all([
           Competitions.getCompetitionData(),

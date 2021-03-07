@@ -5,6 +5,9 @@
           <v-btn text to="/">
             <span class="mr-2">Список участников</span>
           </v-btn>
+          <v-btn text to="/cup">
+            <span class="mr-2">Кубок Москвы</span>
+          </v-btn>
           <v-btn text to="/order">
             <span class="mr-2">Новая заявка</span>
           </v-btn>
