@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-layout justify-center>
-      <v-card class="pa-4 my-10" width="800">
+      <v-card class="pa-4 my-10" :width="800">
         <v-card-title class="mb-6">
           <h2 class="font-weight-black">
             Заявка успешно создана!

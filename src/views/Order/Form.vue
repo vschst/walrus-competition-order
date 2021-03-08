@@ -1,281 +1,270 @@
 <template>
-  <v-container>
+  <v-container fill-height>
     <v-layout justify-center>
-      <v-card class="pa-4 my-10" :loading="isLoading" width="600">
-        <template slot="progress">
-          <div class="text-center my-10">
-            <v-progress-circular
-                :size="80"
-                color="red"
-                indeterminate
-            ></v-progress-circular>
-          </div>
-        </template>
-        <template v-if="!isLoading">
-          <v-card-title class="mb-6">
-            <h1 class="font-weight-black">
-              {{ competitionName }}
-            </h1>
-          </v-card-title>
-          <v-card-subtitle>
-            <h1 class="font-weight-medium mb-6">
-              Заявка на участие в соревнованиях
-            </h1>
-          </v-card-subtitle>
-          <v-alert
-              v-model="showAlert"
-              border="top"
-              color="red lighten-2"
-              class="mx-4"
-              dark
-              dismissible
+      <custom-card class="align-self-center" :loading="isLoading" :width="600">
+        <v-card-title class="mb-6">
+          <h1 class="font-weight-black">
+            {{ competitionName }}
+          </h1>
+        </v-card-title>
+        <v-card-subtitle>
+          <h1 class="font-weight-medium mb-6">
+            Заявка на участие в соревнованиях
+          </h1>
+        </v-card-subtitle>
+        <v-alert
+            v-model="showAlert"
+            border="top"
+            color="red lighten-2"
+            class="mx-4"
+            dark
+            dismissible
+        >
+          Произошла ошибка при создании новой заявки!
+        </v-alert>
+        <v-form
+            ref="form"
+            v-model="valid"
+            lazy-validation
+            class="mx-4"
+        >
+          <h3 class="font-weight-medium mb-4">
+            Информация об участнике
+          </h3>
+          <v-text-field
+              v-model="lastName"
+              :rules="lastNameRules"
+              label="Фамилия"
+              hint="Фамилия участника. Обязательное поле."
+              class="mb-4"
+              persistent-hint
+              filled
+              clearable
+              required
+          ></v-text-field>
+          <v-text-field
+              v-model="firstName"
+              :rules="firstNameRules"
+              label="Имя"
+              hint="Имя участника. Обязательное поле."
+              class="mb-4"
+              persistent-hint
+              filled
+              clearable
+              required
+          ></v-text-field>
+          <v-text-field
+              v-model="middleName"
+              label="Отчество"
+              hint="Отчество участника."
+              persistent-hint
+              clearable
+              filled
+          ></v-text-field>
+          <v-radio-group
+              v-model="gender"
+              class="mt-2"
+              row
           >
-            Произошла ошибка при создании новой заявки!
-          </v-alert>
-          <v-form
-              ref="form"
-              v-model="valid"
-              lazy-validation
-              class="mx-4"
+            <v-radio label="Мужчина" value="male"></v-radio>
+            <v-radio label="Женщина" value="female"></v-radio>
+          </v-radio-group>
+          <v-menu
+              v-model="birthdateMenu"
+              :close-on-content-click="false"
+              max-width="290"
           >
-            <h3 class="font-weight-medium mb-4">
-              Информация об участнике
-            </h3>
-            <v-text-field
-                v-model="lastName"
-                :rules="lastNameRules"
-                label="Фамилия"
-                hint="Фамилия участника. Обязательное поле."
-                class="mb-4"
-                persistent-hint
-                filled
-                clearable
-                required
-            ></v-text-field>
-            <v-text-field
-                v-model="firstName"
-                :rules="firstNameRules"
-                label="Имя"
-                hint="Имя участника. Обязательное поле."
-                class="mb-4"
-                persistent-hint
-                filled
-                clearable
-                required
-            ></v-text-field>
-            <v-text-field
-                v-model="middleName"
-                label="Отчество"
-                hint="Отчество участника."
-                persistent-hint
-                clearable
-                filled
-            ></v-text-field>
-            <v-radio-group
-                v-model="gender"
-                class="mt-2"
-                row
-            >
-              <v-radio label="Мужчина" value="male"></v-radio>
-              <v-radio label="Женщина" value="female"></v-radio>
-            </v-radio-group>
-            <v-menu
-                v-model="birthdateMenu"
-                :close-on-content-click="false"
-                max-width="290"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                    v-model="birthdate"
-                    :rules="birthdateRules"
-                    label="День рождения"
-                    hint="День рождения участника. Обязательное поле."
-                    persistent-hint
-                    v-bind="attrs"
-                    v-on="on"
-                    readonly
-                    filled
-                    required
-                    clearable
-                ></v-text-field>
-              </template>
-              <v-date-picker
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
                   v-model="birthdate"
-                  @change="birthdateMenu = false"
-              ></v-date-picker>
-            </v-menu>
-            <v-checkbox
-                v-model="isParaSwimmer"
-                label="Участник - парапловец"
-                class="mt-2"
-                required
-            ></v-checkbox>
-            <v-text-field
-                v-model="clubName"
-                :rules="clubNameRules"
-                label="Клуб"
-                hint="Клуб участника. Обязательное поле."
-                class="mb-4"
-                persistent-hint
-                clearable
-                filled
-            ></v-text-field>
-            <v-text-field
-                v-model="location"
-                :rules="locationRules"
-                label="Город"
-                hint="Город участника. Обязательное поле."
-                class="mb-4"
-                persistent-hint
-                clearable
-                filled
-            ></v-text-field>
-            <v-text-field
-                v-model="email"
-                :rules="emailRules"
-                label="E-mail"
-                hint="E-mail участника. Обязательное поле."
-                class="mb-4"
-                persistent-hint
-                clearable
-                filled
-            ></v-text-field>
-            <v-text-field
-                v-model="phone"
-                label="Телефон"
-                hint="Телефон участника."
-                class="mb-4"
-                persistent-hint
-                clearable
-                filled
-            ></v-text-field>
-            <v-checkbox
-                v-model="needSkis"
-                label="Нужны лыжи"
-                class="mb-6"
-                required
-            ></v-checkbox>
-            <h3 class="font-weight-medium mb-4">
-              Участие в соревнованиях
-            </h3>
-            <v-data-table
-                :headers="distancesHeaders"
-                :items="selectedDistances"
-                item-key="name"
-                class="mb-2"
-                no-data-text="Не выбрано дистанций"
-                hide-default-footer
-                disable-pagination
-            />
-            <v-dialog
-                v-model="distanceDialog"
-                max-width="1100"
-            >
-              <template v-slot:activator="{ on, attrs }">
+                  :rules="birthdateRules"
+                  label="День рождения"
+                  hint="День рождения участника. Обязательное поле."
+                  persistent-hint
+                  v-bind="attrs"
+                  v-on="on"
+                  readonly
+                  filled
+                  required
+                  clearable
+              ></v-text-field>
+            </template>
+            <v-date-picker
+                v-model="birthdate"
+                @change="birthdateMenu = false"
+            ></v-date-picker>
+          </v-menu>
+          <v-checkbox
+              v-model="isParaSwimmer"
+              label="Участник - парапловец"
+              class="mt-2"
+              required
+          ></v-checkbox>
+          <v-text-field
+              v-model="clubName"
+              :rules="clubNameRules"
+              label="Клуб"
+              hint="Клуб участника. Обязательное поле."
+              class="mb-4"
+              persistent-hint
+              clearable
+              filled
+          ></v-text-field>
+          <v-text-field
+              v-model="location"
+              :rules="locationRules"
+              label="Город"
+              hint="Город участника. Обязательное поле."
+              class="mb-4"
+              persistent-hint
+              clearable
+              filled
+          ></v-text-field>
+          <v-text-field
+              v-model="email"
+              :rules="emailRules"
+              label="E-mail"
+              hint="E-mail участника. Обязательное поле."
+              class="mb-4"
+              persistent-hint
+              clearable
+              filled
+          ></v-text-field>
+          <v-text-field
+              v-model="phone"
+              label="Телефон"
+              hint="Телефон участника."
+              class="mb-4"
+              persistent-hint
+              clearable
+              filled
+          ></v-text-field>
+          <v-checkbox
+              v-model="needSkis"
+              label="Нужны лыжи"
+              class="mb-6"
+              required
+          ></v-checkbox>
+          <h3 class="font-weight-medium mb-4">
+            Участие в соревнованиях
+          </h3>
+          <v-data-table
+              :headers="distancesHeaders"
+              :items="selectedDistances"
+              item-key="name"
+              class="mb-2"
+              no-data-text="Не выбрано дистанций"
+              hide-default-footer
+              disable-pagination
+          />
+          <v-dialog
+              v-model="distanceDialog"
+              max-width="1100"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                  color="primary"
+                  class="mb-6"
+                  v-bind="attrs"
+                  v-on="on"
+              >Добавить участие</v-btn>
+            </template>
+            <v-card class="pa-4">
+              <h3 class="font-weight-medium mb-4">
+                Выбранные дистанции
+              </h3>
+              <v-data-table
+                  v-model="racesSelected"
+                  :headers="racesHeaders"
+                  :items="filteredRaces"
+                  item-key="id"
+                  show-select
+                  class="elevation-1 mb-6"
+                  :items-per-page="5"
+              >
+                <template #item.swimming_style="{ item }">
+                  {{ getSwimmingStyleText(item.swimming_style) }}
+                </template>
+                <template #item.gender="{ item }">
+                  {{ getGenderText(item.gender) }}
+                </template>
+                <template #item.age_group="{ item }">
+                  {{ getAgeGroupText(item.min_age, item.max_age) }}
+                </template>
+                <template #item.date="{ item }">
+                  {{ getFormattedDate(item.date) }}
+                </template>
+              </v-data-table>
+              <h3 class="font-weight-medium mb-4">
+                Выбранные эстафеты
+              </h3>
+              <v-data-table
+                  v-model="relaysSelected"
+                  :headers="relaysHeaders"
+                  :items="relays"
+                  item-key="id"
+                  show-select
+                  class="elevation-1 mb-6"
+                  :items-per-page="5"
+              >
+                <template #item.date="{ item }">
+                  {{ getFormattedDate(item.date) }}
+                </template>
+              </v-data-table>
+              <h3 class="font-weight-medium mb-4">
+                Участие в криатлоне
+              </h3>
+              <v-data-table
+                  v-model="cryatlonsSelected"
+                  :headers="cryatlonsHeaders"
+                  :items="filteredCryatlons"
+                  item-key="id"
+                  class="elevation-1 mb-6"
+                  :items-per-page="5"
+                  single-select
+                  show-select
+              >
+                <template #item.gender="{ item }">
+                  {{ getGenderText(item.gender) }}
+                </template>
+                <template #item.date="{ item }">
+                  {{ getFormattedDate(item.date) }}
+                </template>
+              </v-data-table>
+              <v-card-actions>
+                <v-spacer></v-spacer>
                 <v-btn
-                    color="primary"
-                    class="mb-6"
-                    v-bind="attrs"
-                    v-on="on"
-                >Добавить участие</v-btn>
-              </template>
-              <v-card class="pa-4">
-                <h3 class="font-weight-medium mb-4">
-                  Выбранные дистанции
-                </h3>
-                <v-data-table
-                    v-model="racesSelected"
-                    :headers="racesHeaders"
-                    :items="filteredRaces"
-                    item-key="id"
-                    show-select
-                    class="elevation-1 mb-6"
-                    :items-per-page="5"
+                    color="success"
+                    @click="distanceDialog = false"
                 >
-                  <template #item.swimming_style="{ item }">
-                    {{ getSwimmingStyleText(item.swimming_style) }}
-                  </template>
-                  <template #item.gender="{ item }">
-                    {{ getGenderText(item.gender) }}
-                  </template>
-                  <template #item.age_group="{ item }">
-                    {{ getAgeGroupText(item.min_age, item.max_age) }}
-                  </template>
-                  <template #item.date="{ item }">
-                    {{ getFormattedDate(item.date) }}
-                  </template>
-                </v-data-table>
-                <h3 class="font-weight-medium mb-4">
-                  Выбранные эстафеты
-                </h3>
-                <v-data-table
-                    v-model="relaysSelected"
-                    :headers="relaysHeaders"
-                    :items="relays"
-                    item-key="id"
-                    show-select
-                    class="elevation-1 mb-6"
-                    :items-per-page="5"
-                >
-                  <template #item.date="{ item }">
-                    {{ getFormattedDate(item.date) }}
-                  </template>
-                </v-data-table>
-                <h3 class="font-weight-medium mb-4">
-                  Участие в криатлоне
-                </h3>
-                <v-data-table
-                    v-model="cryatlonsSelected"
-                    :headers="cryatlonsHeaders"
-                    :items="filteredCryatlons"
-                    item-key="id"
-                    class="elevation-1 mb-6"
-                    :items-per-page="5"
-                    single-select
-                    show-select
-                >
-                  <template #item.gender="{ item }">
-                    {{ getGenderText(item.gender) }}
-                  </template>
-                  <template #item.date="{ item }">
-                    {{ getFormattedDate(item.date) }}
-                  </template>
-                </v-data-table>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn
-                      color="success"
-                      @click="distanceDialog = false"
-                  >
-                    Сохранить
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-            <h3 class="font-weight-medium mb-4">
-              Дополнительная информация
-            </h3>
-            <v-textarea
-                v-model="additional"
-                filled
-                name="input-7-4"
-                class="mb-8"
-                label="Укажите дополнительную информацию"
-                hint="Необязятельное поле."
-                persistent-hint
-            ></v-textarea>
-            <v-btn
-                :disabled="!isSelectedDistances || !valid"
-                color="success"
-                class="mr-4"
-                @click="submitOrder"
-                :loading="isOrderCreating"
-            >
-              Отправить заявку
-            </v-btn>
-          </v-form>
-        </template>
-      </v-card>
+                  Сохранить
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          <h3 class="font-weight-medium mb-4">
+            Дополнительная информация
+          </h3>
+          <v-textarea
+              v-model="additional"
+              filled
+              name="input-7-4"
+              class="mb-8"
+              label="Укажите дополнительную информацию"
+              hint="Необязятельное поле."
+              persistent-hint
+          ></v-textarea>
+          <v-btn
+              :disabled="!isSelectedDistances || !valid"
+              color="success"
+              class="mr-4"
+              @click="submitOrder"
+              :loading="isOrderCreating"
+          >
+            Отправить заявку
+          </v-btn>
+        </v-form>
+      </custom-card>
     </v-layout>
   </v-container>
 </template>
@@ -291,9 +280,13 @@ import type { Relay } from "./interfaces/relay.interface";
 import type { Cryatlon } from "./interfaces/cryatlon.interface";
 import { COMPETITION_ID } from "@/config/api";
 import { CreateOrderDTO } from "@/api/dto/create-order.dto";
+import CustomCard from "@/components/CutomCard.vue"
 
 export default Vue.extend({
   name: 'OrderForm',
+  components: {
+    CustomCard
+  },
   data() {
     return {
       isLoading: true,
