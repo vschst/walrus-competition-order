@@ -140,6 +140,7 @@
               filled
           ></v-text-field>
           <v-checkbox
+              v-if="!isSukko"
               v-model="needSkis"
               label="Нужны лыжи"
               class="mb-6"
@@ -173,6 +174,7 @@
               <h3 class="font-weight-medium mb-4">
                 Выбранные дистанции
               </h3>
+              <!--  SELECTED RACES  -->
               <v-data-table
                   v-model="racesSelected"
                   :headers="racesHeaders"
@@ -195,6 +197,7 @@
                   {{ getFormattedDate(item.date) }}
                 </template>
               </v-data-table>
+              <!--  SELECTED RELAYS -->
               <h3 class="font-weight-medium mb-4">
                 Выбранные эстафеты
               </h3>
@@ -207,30 +210,59 @@
                   class="elevation-1 mb-6"
                   :items-per-page="5"
               >
-                <template #item.date="{ item }">
-                  {{ getFormattedDate(item.date) }}
-                </template>
-              </v-data-table>
-              <h3 class="font-weight-medium mb-4">
-                Участие в криатлоне
-              </h3>
-              <v-data-table
-                  v-model="cryatlonsSelected"
-                  :headers="cryatlonsHeaders"
-                  :items="filteredCryatlons"
-                  item-key="id"
-                  class="elevation-1 mb-6"
-                  :items-per-page="5"
-                  single-select
-                  show-select
-              >
-                <template #item.gender="{ item }">
-                  {{ getGenderText(item.gender) }}
+                <template #item.swimming_style="{ item }">
+                  {{ getSwimmingStyleText(item.swimming_style) }}
                 </template>
                 <template #item.date="{ item }">
                   {{ getFormattedDate(item.date) }}
                 </template>
               </v-data-table>
+              <!-- CRYATLON -->
+              <template v-if="!isSukko">
+                <h3 class="font-weight-medium mb-4">
+                  Участие в криатлоне
+                </h3>
+                <v-data-table
+                    v-model="cryatlonsSelected"
+                    :headers="cryatlonsHeaders"
+                    :items="filteredCryatlons"
+                    item-key="id"
+                    class="elevation-1 mb-6"
+                    :items-per-page="5"
+                    single-select
+                    show-select
+                >
+                  <template #item.gender="{ item }">
+                    {{ getGenderText(item.gender) }}
+                  </template>
+                  <template #item.date="{ item }">
+                    {{ getFormattedDate(item.date) }}
+                  </template>
+                </v-data-table>
+              </template>
+              <!--  AQUATLON  -->
+              <template v-if="isSukko">
+                <h3 class="font-weight-medium mb-4">
+                  Участие в акватлоне
+                </h3>
+                <v-data-table
+                    v-model="aquatlonsSelected"
+                    :headers="aquatlonsHeaders"
+                    :items="filteredAquatlons"
+                    item-key="id"
+                    class="elevation-1 mb-6"
+                    :items-per-page="5"
+                    single-select
+                    show-select
+                >
+                  <template #item.gender="{ item }">
+                    {{ getGenderText(item.gender) }}
+                  </template>
+                  <template #item.date="{ item }">
+                    {{ getFormattedDate(item.date) }}
+                  </template>
+                </v-data-table>
+              </template>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn
@@ -278,7 +310,9 @@ import { getFormattedDate } from "@/utils/time";
 import type { Race } from "./interfaces/race.interface";
 import type { Relay } from "./interfaces/relay.interface";
 import type { Cryatlon } from "./interfaces/cryatlon.interface";
+import type { Aquatlon } from './interfaces/aquatlon.interface'
 import { COMPETITION_ID } from "@/config/api";
+import { COMPETITION_MODE } from "@/config/competition";
 import { CreateOrderDTO } from "@/api/dto/create-order.dto";
 import CustomCard from "@/components/CutomCard.vue"
 
@@ -289,6 +323,7 @@ export default Vue.extend({
   },
   data() {
     return {
+      isSukko: COMPETITION_MODE === 'sukko',
       isLoading: true,
       competitionName: '',
       valid: true,
@@ -397,6 +432,12 @@ export default Vue.extend({
           value: 'distance',
         },
         {
+          text: 'Стиль плавания',
+          align: 'center',
+          value: 'swimming_style',
+          sortable: false
+        },
+        {
           text: 'Число участников',
           align: 'right',
           value: 'count',
@@ -451,6 +492,38 @@ export default Vue.extend({
       ],
       cryatlonsSelected: [] as Cryatlon[],
       cryatlons: [] as Cryatlon[],
+      aquatlonsHeaders: [
+        {
+          text: 'Название',
+          align: 'start',
+          value: 'name',
+          sortable: false
+        },
+        {
+          text: 'Бег (метров)',
+          align: 'right',
+          value: 'run_distance',
+        },
+        {
+          text: 'Плавание (метров)',
+          align: 'right',
+          value: 'water_distance',
+        },
+        {
+          text: 'Пол',
+          align: 'center',
+          value: 'gender',
+          sortable: false
+        },
+        {
+          text: 'Дата',
+          align: 'center',
+          value: 'date',
+          sortable: false
+        }
+      ],
+      aquatlonsSelected: [] as Aquatlon[],
+      aquatlons: [] as Aquatlon[],
       additional: '',
       isOrderCreating: false,
       showAlert: false
@@ -473,6 +546,11 @@ export default Vue.extend({
         return (cryatlon.gender === 'all' || cryatlon.gender === this.gender)
       })
     },
+    filteredAquatlons(this: any) {
+      return this.aquatlons.filter((aquatlon: Aquatlon) => {
+        return (aquatlon.gender === 'all' || aquatlon.gender === this.gender)
+      })
+    },
     isSelectedRaces(this: any) {
       return this.racesSelected.length > 0
     },
@@ -481,6 +559,9 @@ export default Vue.extend({
     },
     isSelectedCryatlons(this: any) {
       return this.cryatlonsSelected.length > 0
+    },
+    isSelectedAquatlons(this: any) {
+      return this.aquatlonsSelected.length > 0
     },
     selectedDistances(this: any) {
       return [].concat(
@@ -495,6 +576,10 @@ export default Vue.extend({
           this.cryatlonsSelected.map((cryatlon: Cryatlon) => ({
             name: cryatlon.name,
             type: 'Криатлон'
+          })),
+          this.aquatlonsSelected.map((aquatlon: Aquatlon) => ({
+            name: aquatlon.name,
+            type: 'Акватлон'
           }))
       )
     },
@@ -513,12 +598,13 @@ export default Vue.extend({
     async loadCompetitonData(this: any) {
       try {
         const { data } = await Competitions.getCompetitionData()
-        const { name, races, relays, cryatlons } = data
+        const { name, races, relays, cryatlons, aquatlons } = data
 
         this.competitionName = name
         this.races = races
         this.relays = relays
         this.cryatlons = cryatlons
+        this.aquatlons = aquatlons
         this.isLoading = false
       } catch (error) {
         console.error(error)
@@ -546,6 +632,7 @@ export default Vue.extend({
           ...(this.isSelectedRaces && { races: this.racesSelected.map((race: Race) => race.id)}),
           ...(this.isSelectedRelays && { relays: this.relaysSelected.map((relay: Relay) => relay.id) }),
           ...(this.isSelectedCryatlons && { cryatlons: this.cryatlonsSelected.map((cryatlon: Cryatlon) => cryatlon.id) }),
+          ...(this.isSelectedAquatlons && { aquatlons: this.aquatlonsSelected.map((aquatlon: Aquatlon) => aquatlon.id) }),
           ...(this.additional && { additional: this.additional })
         }
 

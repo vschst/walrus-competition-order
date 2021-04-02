@@ -9,7 +9,7 @@
         </v-card-title>
         <v-card-subtitle>
           <h1 class="font-weight-medium mb-6">
-            Кубок Москвы
+            {{ isSukko ? 'Черноморский Кубок' : 'Кубок Москвы' }}
           </h1>
         </v-card-subtitle>
         <!--  RACES -->
@@ -72,6 +72,10 @@
               <td class="font-weight-bold">{{ relayOrder.distance }}</td>
             </tr>
             <tr>
+              <td>Стиль плавания</td>
+              <td class="font-weight-bold">{{ getSwimmingStyleText(relayOrder.swimming_style) }}</td>
+            </tr>
+            <tr>
               <td>Число участников</td>
               <td class="font-weight-bold">{{ relayOrder.count }}</td>
             </tr>
@@ -99,6 +103,7 @@ import { RaceOrders } from "./interfaces/race-orders.interface";
 import { RelayOrders } from "./interfaces/relay-orders.interface";
 import OrdersTable from "@/components/OrdersTable.vue";
 import CustomCard from "@/components/CutomCard.vue"
+import { COMPETITION_MODE } from "@/config/competition";
 
 export default Vue.extend({
   name: 'CupMain',
@@ -108,6 +113,7 @@ export default Vue.extend({
   },
   data() {
     return {
+      isSukko: COMPETITION_MODE === 'sukko',
       isLoading: true,
       competition: {
         id: null,

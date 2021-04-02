@@ -14,5 +14,6 @@ export interface CreateOrderDTO {
     races?: number[];
     relays?: number[];
     cryatlons?: number[];
+    aquatlons?: number[];
     additional?: string;
 }

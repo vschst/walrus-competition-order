@@ -1,0 +1,1 @@
+export const COMPETITION_MODE =  process.env.VUE_APP_COMPETITION_MODE

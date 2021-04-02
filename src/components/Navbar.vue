@@ -6,7 +6,7 @@
           <span class="mr-2">Список участников</span>
         </v-btn>
         <v-btn text to="/cup">
-          <span class="mr-2">Кубок Москвы</span>
+          <span class="mr-2">{{ isSukko ? 'Черноморский Кубок' : 'Кубок Москвы' }}</span>
         </v-btn>
         <v-btn text to="/order">
           <span class="mr-2">Новая заявка</span>
@@ -18,8 +18,14 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { COMPETITION_MODE } from "@/config/competition";
 
 export default Vue.extend({
   name: "Navbar",
+  data() {
+    return {
+      isSukko: COMPETITION_MODE === 'sukko'
+    }
+  }
 })
 </script>
