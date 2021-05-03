@@ -13,6 +13,9 @@
         {{ getFullName(item.last_name, item.first_name, item.middle_name) }}
       </span>
     </template>
+    <template #item.birthdate="{ item }">
+      {{ getAgeFromBirthdate(item.birthdate) }}
+    </template>
     <template #item.status="{ item }">
       <order-status :status="item.status"/>
     </template>
@@ -22,7 +25,7 @@
 <script lang="ts">
 import Vue, { PropType } from 'vue'
 import { Order } from "./interfaces/order.interface";
-import { getFullName } from "@/utils/members";
+import { getFullName, getAgeFromBirthdate } from "@/utils/members";
 import OrderStatus from '@/components/OrderStatus.vue'
 import { DataTableHeader } from "vuetify";
 
@@ -62,6 +65,24 @@ export default Vue.extend({
         text: 'Город',
         value: 'location',
         sortable: true
+      },
+      {
+        text: 'Возраст',
+        value: 'birthdate',
+        sort: (a: any, b: any) => {
+          const ageA = getAgeFromBirthdate(a)
+          const ageB = getAgeFromBirthdate(b)
+
+          if (ageA == ageB) {
+            return 0
+          }
+          else if (ageA < ageB) {
+            return -1
+          }
+          else {
+            return 1
+          }
+        }
       }
     ] as DataTableHeader[]
 
@@ -79,7 +100,8 @@ export default Vue.extend({
     }
   },
   methods: {
-    getFullName
+    getFullName,
+    getAgeFromBirthdate
   }
 })
 </script>
