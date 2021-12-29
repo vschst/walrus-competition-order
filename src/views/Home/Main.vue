@@ -3,7 +3,7 @@
     <v-layout justify-center>
       <custom-card class="align-self-center" :loading="isLoading" :width="1000">
         <v-card-title class="mb-6">
-          <h1 class="font-weight-black">
+          <h1 class="font-weight-black" style="word-break: break-word">
             {{ competition.name }}
           </h1>
         </v-card-title>

@@ -6,7 +6,7 @@
           <span class="mr-2">Список участников</span>
         </v-btn>
         <v-btn text to="/cup">
-          <span class="mr-2">{{ isSukko ? 'Черноморский Кубок' : 'Кубок Москвы' }}</span>
+          <span class="mr-2">{{ isSukko ? 'Черноморский Кубок' : 'Кубок Московской области' }}</span>
         </v-btn>
         <v-btn text to="/order">
           <span class="mr-2">Новая заявка</span>
