@@ -1,16 +1,15 @@
-import { COMPETITION_ID } from "@/config/api";
 import { request } from "../axios";
 
-const getCompetitionData = async () => {
+const getCompetitionData = async (competitionId: number) => {
     return await request({
-        url: `/competitions/${COMPETITION_ID}`,
+        url: `/competitions/${competitionId}`,
         method: 'GET'
     })
 }
 
-const getCompetitionOrders = async () => {
+const getCompetitionOrders = async (competitionId: number) => {
     return await request({
-        url: `/competitions/public/orders/${COMPETITION_ID}`,
+        url: `/competitions/public/orders/${competitionId}`,
         method: 'GET'
     })
 }

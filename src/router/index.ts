@@ -5,17 +5,24 @@ Vue.use(VueRouter)
 
 const routes: Array<RouteConfig> = [
   {
-    path: '/',
-    name: 'home',
-    component: () => import(/* webpackChunkName: "home" */ '../views/Home/Main.vue')
+    path: '/competition/:id',
+    name: 'competition',
+    component: () => import(/* webpackChunkName: "competition" */ '../views/Competition/Main.vue'),
+    children: [
+      {
+        path: 'orders',
+        name: 'competition-orders',
+        component: () => import(/* webpackChunkName: "orders" */ '../views/Competition/Orders/Main.vue')
+      },
+      {
+        path: 'protocols',
+        name: 'competition-protocols',
+        component: () => import(/* webpackChunkName: "protocols" */ '../views/Competition/Protocols/Main.vue')
+      }
+    ]
   },
   {
-    path: '/cup',
-    name: 'cup',
-    component: () => import(/* webpackChunkName: "cup" */ '../views/Cup/Main.vue')
-  },
-  {
-    path: '/order',
+    path: '/order/:id',
     name: 'order',
     component: () => import(/* webpackChunkName: "order" */ '../views/Order/Main.vue')
   }

@@ -140,7 +140,7 @@
               filled
           ></v-text-field>
           <v-checkbox
-              v-if="!isSukko"
+              v-if="isWinterMode && hasCryatlonsDistances"
               v-model="needSkis"
               label="Нужны лыжи"
               class="mb-6"
@@ -171,54 +171,58 @@
               >Добавить участие</v-btn>
             </template>
             <v-card class="pa-4">
-              <h3 class="font-weight-medium mb-4">
-                Выбранные дистанции
-              </h3>
-              <!--  SELECTED RACES  -->
-              <v-data-table
-                  v-model="racesSelected"
-                  :headers="racesHeaders"
-                  :items="filteredRaces"
-                  item-key="id"
-                  show-select
-                  class="elevation-1 mb-6"
-                  :items-per-page="5"
-              >
-                <template #item.swimming_style="{ item }">
-                  {{ getSwimmingStyleText(item.swimming_style) }}
-                </template>
-                <template #item.gender="{ item }">
-                  {{ getGenderText(item.gender) }}
-                </template>
-                <template #item.age_group="{ item }">
-                  {{ getAgeGroupText(item.min_age, item.max_age) }}
-                </template>
-                <template #item.date="{ item }">
-                  {{ getFormattedDate(item.date) }}
-                </template>
-              </v-data-table>
+              <template v-if="hasRacesDistances">
+                <h3 class="font-weight-medium mb-4">
+                  Выбранные дистанции
+                </h3>
+                <!--  SELECTED RACES  -->
+                <v-data-table
+                    v-model="racesSelected"
+                    :headers="racesHeaders"
+                    :items="filteredRaces"
+                    item-key="id"
+                    show-select
+                    class="elevation-1 mb-6"
+                    :items-per-page="5"
+                >
+                  <template #item.swimming_style="{ item }">
+                    {{ getSwimmingStyleText(item.swimming_style) }}
+                  </template>
+                  <template #item.gender="{ item }">
+                    {{ getGenderText(item.gender) }}
+                  </template>
+                  <template #item.age_group="{ item }">
+                    {{ getAgeGroupText(item.min_age, item.max_age) }}
+                  </template>
+                  <template #item.date="{ item }">
+                    {{ getFormattedDate(item.date) }}
+                  </template>
+                </v-data-table>
+              </template>
               <!--  SELECTED RELAYS -->
-              <h3 class="font-weight-medium mb-4">
-                Выбранные эстафеты
-              </h3>
-              <v-data-table
-                  v-model="relaysSelected"
-                  :headers="relaysHeaders"
-                  :items="relays"
-                  item-key="id"
-                  show-select
-                  class="elevation-1 mb-6"
-                  :items-per-page="5"
-              >
-                <template #item.swimming_style="{ item }">
-                  {{ getSwimmingStyleText(item.swimming_style) }}
-                </template>
-                <template #item.date="{ item }">
-                  {{ getFormattedDate(item.date) }}
-                </template>
-              </v-data-table>
+              <template v-if="hasRelaysDistances">
+                <h3 class="font-weight-medium mb-4">
+                  Выбранные эстафеты
+                </h3>
+                <v-data-table
+                    v-model="relaysSelected"
+                    :headers="relaysHeaders"
+                    :items="relays"
+                    item-key="id"
+                    show-select
+                    class="elevation-1 mb-6"
+                    :items-per-page="5"
+                >
+                  <template #item.swimming_style="{ item }">
+                    {{ getSwimmingStyleText(item.swimming_style) }}
+                  </template>
+                  <template #item.date="{ item }">
+                    {{ getFormattedDate(item.date) }}
+                  </template>
+                </v-data-table>
+              </template>
               <!-- CRYATLON -->
-              <template v-if="!isSukko">
+              <template v-if="isWinterMode && hasCryatlonsDistances">
                 <h3 class="font-weight-medium mb-4">
                   Участие в криатлоне
                 </h3>
@@ -241,7 +245,7 @@
                 </v-data-table>
               </template>
               <!--  AQUATLON  -->
-              <template v-if="isSukko">
+              <template v-if="isSpringMode && hasAquatlonsDistances">
                 <h3 class="font-weight-medium mb-4">
                   Участие в акватлоне
                 </h3>
@@ -323,7 +327,8 @@ export default Vue.extend({
   },
   data() {
     return {
-      isSukko: COMPETITION_MODE === 'sukko',
+      isWinterMode: COMPETITION_MODE === 'winter',
+      isSpringMode: COMPETITION_MODE === 'spring',
       isLoading: true,
       competitionName: '',
       valid: true,
@@ -529,6 +534,11 @@ export default Vue.extend({
       showAlert: false
     }
   },
+  watch: {
+    '$route.params.id': async function(val) {
+      await this.loadCompetitonData(Number(val))
+    }
+  },
   computed: {
     age(this: any) {
       return this.birthdate ? getAgeFromBirthdate(this.birthdate) : 0
@@ -541,15 +551,27 @@ export default Vue.extend({
             ((this.birthdate && race.max_age) ? (this.age <= race.max_age) : true)
       })
     },
+    hasRacesDistances(this: any) {
+      return this.filteredRaces.length > 0
+    },
+    hasRelaysDistances(this: any) {
+      return this.relays.length > 0
+    },
     filteredCryatlons(this: any) {
       return this.cryatlons.filter((cryatlon: Cryatlon) => {
         return (cryatlon.gender === 'all' || cryatlon.gender === this.gender)
       })
     },
+    hasCryatlonsDistances(this: any) {
+      return this.filteredCryatlons.length > 0
+    },
     filteredAquatlons(this: any) {
       return this.aquatlons.filter((aquatlon: Aquatlon) => {
         return (aquatlon.gender === 'all' || aquatlon.gender === this.gender)
       })
+    },
+    hasAquatlonsDistances(this: any) {
+      return this.filteredAquatlons.length > 0
     },
     isSelectedRaces(this: any) {
       return this.racesSelected.length > 0
@@ -588,16 +610,18 @@ export default Vue.extend({
     }
   },
   async mounted() {
-    await this.loadCompetitonData()
+    await this.loadCompetitonData(Number(this.$route.params.id))
   },
   methods: {
     getSwimmingStyleText,
     getAgeGroupText,
     getGenderText,
     getFormattedDate,
-    async loadCompetitonData(this: any) {
+    async loadCompetitonData(this: any, competitionId: number) {
+      this.isLoading = true
+
       try {
-        const { data } = await Competitions.getCompetitionData()
+        const { data } = await Competitions.getCompetitionData(competitionId)
         const { name, races, relays, cryatlons, aquatlons } = data
 
         this.competitionName = name

@@ -29,7 +29,7 @@ import { Order } from "@/components/interfaces/order.interface";
 import CustomCard from "@/components/CutomCard.vue"
 
 export default Vue.extend({
-  name: 'HomeMain',
+  name: 'OrdersMain',
   components: {
     OrdersTable,
     CustomCard
@@ -45,15 +45,20 @@ export default Vue.extend({
       orders: [] as Order[],
     }
   },
+  watch: {
+    '$route.params.id': async function(val) {
+      await this.loadOrdersData(Number(val))
+    }
+  },
   async mounted() {
-    await this.loadOrdersData()
+    await this.loadOrdersData(Number(this.$route.params.id))
   },
   methods: {
-    async loadOrdersData() {
+    async loadOrdersData(competitionId: number) {
       try {
         const response = await Promise.all([
-          Competitions.getCompetitionData(),
-          Orders.getPublicOrders()
+          Competitions.getCompetitionData(competitionId),
+          Orders.getPublicOrders(competitionId)
         ])
         const { data: competition } = response[0]
         const { data: orders } = response[1]

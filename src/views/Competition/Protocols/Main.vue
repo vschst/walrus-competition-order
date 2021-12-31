@@ -9,7 +9,7 @@
         </v-card-title>
         <v-card-subtitle>
           <h1 class="font-weight-medium mb-6">
-            {{ isSukko ? 'Черноморский Кубок' : 'Кубок Московской области' }}
+            Стартовые протоколы
           </h1>
         </v-card-subtitle>
         <!--  RACES -->
@@ -103,17 +103,15 @@ import { RaceOrders } from "./interfaces/race-orders.interface";
 import { RelayOrders } from "./interfaces/relay-orders.interface";
 import OrdersTable from "@/components/OrdersTable.vue";
 import CustomCard from "@/components/CutomCard.vue"
-import { COMPETITION_MODE } from "@/config/competition";
 
 export default Vue.extend({
-  name: 'CupMain',
+  name: 'ProtocolsMain',
   components: {
     OrdersTable,
     CustomCard
   },
   data() {
     return {
-      isSukko: COMPETITION_MODE === 'sukko',
       isLoading: true,
       competition: {
         id: null,
@@ -124,17 +122,22 @@ export default Vue.extend({
       relayOrders: [] as RelayOrders[]
     }
   },
+  watch: {
+    '$route.params.id': async function(val) {
+      await this.loadCompetitionOrdersData(Number(val))
+    }
+  },
   async mounted() {
-    await this.loadCompetitionOrdersData()
+    await this.loadCompetitionOrdersData(Number(this.$route.params.id))
   },
   methods: {
     getSwimmingStyleText,
     getAgeGroupText,
     getGenderText,
     getFormattedDate,
-    async loadCompetitionOrdersData() {
+    async loadCompetitionOrdersData(competitionId: number) {
       try {
-        const { data: competitionOrders } = await Competitions.getCompetitionOrders()
+        const { data: competitionOrders } = await Competitions.getCompetitionOrders(competitionId)
         const { id, name, description, races, relays } = competitionOrders
 
         this.competition.id = id
