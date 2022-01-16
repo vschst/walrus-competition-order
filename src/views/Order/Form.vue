@@ -315,7 +315,6 @@ import type { Race } from "./interfaces/race.interface";
 import type { Relay } from "./interfaces/relay.interface";
 import type { Cryatlon } from "./interfaces/cryatlon.interface";
 import type { Aquatlon } from './interfaces/aquatlon.interface'
-import { COMPETITION_ID } from "@/config/api";
 import { COMPETITION_MODE } from "@/config/competition";
 import { CreateOrderDTO } from "@/api/dto/create-order.dto";
 import CustomCard from "@/components/CutomCard.vue"
@@ -463,26 +462,6 @@ export default Vue.extend({
           sortable: false
         },
         {
-          text: 'Бег (метров)',
-          align: 'right',
-          value: 'run_distance',
-        },
-        {
-          text: 'Лыжи (метров)',
-          align: 'right',
-          value: 'ski_distance',
-        },
-        {
-          text: 'Плавание (метров)',
-          align: 'right',
-          value: 'water_distance',
-        },
-        {
-          text: 'Бег босиком (метров)',
-          align: 'right',
-          value: 'barefoot_distance',
-        },
-        {
           text: 'Пол',
           align: 'center',
           value: 'gender',
@@ -617,12 +596,20 @@ export default Vue.extend({
     getAgeGroupText,
     getGenderText,
     getFormattedDate,
+    resetForm() {
+      this.racesSelected = []
+      this.relaysSelected = []
+      this.cryatlonsSelected = []
+      this.aquatlonsSelected = []
+      this.needSkis = false
+    },
     async loadCompetitonData(this: any, competitionId: number) {
       this.isLoading = true
 
       try {
-        const { data } = await Competitions.getCompetitionData(competitionId)
-        const { name, races, relays, cryatlons, aquatlons } = data
+        const { data: responseData } = await Competitions.getCompetitionData(competitionId)
+        const { data: competition } = responseData
+        const { name, races, relays, cryatlons, aquatlons } = competition
 
         this.competitionName = name
         this.races = races
@@ -630,8 +617,8 @@ export default Vue.extend({
         this.cryatlons = cryatlons
         this.aquatlons = aquatlons
         this.isLoading = false
-      } catch (error) {
-        console.error(error)
+      } catch (err) {
+        console.error(err)
       }
     },
     async submitOrder () {
@@ -641,7 +628,7 @@ export default Vue.extend({
         this.isOrderCreating = true
 
         const payload: CreateOrderDTO = {
-          competition_id: Number(COMPETITION_ID),
+          competition_id: Number(this.$route.params.id),
           first_name: this.firstName,
           last_name: this.lastName,
           ...(this.middleName && { middle_name: this.middleName }),
@@ -667,7 +654,7 @@ export default Vue.extend({
             this.isOrderCreating = false
             this.$root.$emit('onOrderCreatedSuccessfully')
           }
-        } catch (error) {
+        } catch (err) {
           this.showAlert = true;
         }
       }

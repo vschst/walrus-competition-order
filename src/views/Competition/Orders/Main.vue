@@ -22,11 +22,12 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { Competitions } from '@/api'
 import { Orders } from "@/api";
 import OrdersTable from "@/components/OrdersTable.vue";
 import { Order } from "@/components/interfaces/order.interface";
 import CustomCard from "@/components/CutomCard.vue"
+import { UpcomingCompetition } from "@/store/interfaces/competitions.interface";
+import {mapGetters} from "vuex";
 
 export default Vue.extend({
   name: 'OrdersMain',
@@ -38,9 +39,9 @@ export default Vue.extend({
     return {
       isLoading: true,
       competition: {
-        id: null,
+        id: null as number | null,
         name: '',
-        description: null
+        description: null as string | null
       },
       orders: [] as Order[],
     }
@@ -50,28 +51,31 @@ export default Vue.extend({
       await this.loadOrdersData(Number(val))
     }
   },
+  computed: {
+    ...mapGetters('competitions', ['upcomingCompetitions'])
+  },
   async mounted() {
     await this.loadOrdersData(Number(this.$route.params.id))
   },
   methods: {
     async loadOrdersData(competitionId: number) {
       try {
-        const response = await Promise.all([
-          Competitions.getCompetitionData(competitionId),
-          Orders.getPublicOrders(competitionId)
-        ])
-        const { data: competition } = response[0]
-        const { data: orders } = response[1]
-        const { id, name, description } = competition
+        const competition = Array.from<UpcomingCompetition>(this.upcomingCompetitions).find(upcomingCompetition => upcomingCompetition.id === competitionId)
 
-        this.competition.id = id
-        this.competition.name = name
-        this.competition.description = description
-        this.orders = orders
-        this.isLoading = false
+        if (competition) {
+          const { data: responseData } = await Orders.getPublicOrders(competitionId)
+          const { data: orders } = responseData
+          const { id, name, description } = competition
+
+          this.competition.id = id
+          this.competition.name = name
+          this.competition.description = description
+          this.orders = orders
+          this.isLoading = false
+        }
       }
-      catch (error) {
-        console.error(error)
+      catch (err) {
+        console.error(err)
       }
     }
   }

@@ -1,0 +1,1 @@
+export const BUILD_VERSION = process.env.VUE_APP_BUILD_VERSION;

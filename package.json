@@ -1,6 +1,6 @@
 {
   "name": "walrus-competition-order",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -12,7 +12,8 @@
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
-    "vuetify": "^2.4.0"
+    "vuetify": "^2.6.2",
+    "vuex": "^3.6.2"
   },
   "devDependencies": {
     "@mdi/font": "^5.9.55",
@@ -30,9 +31,9 @@
     "sass": "^1.32.0",
     "sass-loader": "^10.0.0",
     "typescript": "~3.9.3",
-    "vue-cli-plugin-vuetify": "~2.1.0",
+    "vue-cli-plugin-vuetify": "~2.4.5",
     "vue-template-compiler": "^2.6.11",
-    "vuetify-loader": "^1.7.0"
+    "vuetify-loader": "^1.7.3"
   },
   "eslintConfig": {
     "root": true,

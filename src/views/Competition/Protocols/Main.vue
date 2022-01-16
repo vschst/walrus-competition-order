@@ -12,6 +12,33 @@
             Стартовые протоколы
           </h1>
         </v-card-subtitle>
+        <!--  CRYATLONS  -->
+        <v-card
+          v-for="cryatlonOrder in cryatlonOrders"
+          :key="`cryatlon_${cryatlonOrder.id}`"
+          class="mx-4 mb-10"
+          tile
+          outlined
+          >
+          <v-simple-table>
+            <tbody>
+            <tr>
+              <td>Название</td>
+              <td class="font-weight-bold">{{ cryatlonOrder.name }}</td>
+            </tr>
+            <tr>
+              <td>Пол</td>
+              <td class="font-weight-bold">{{ getGenderText(cryatlonOrder.gender) }}</td>
+            </tr>
+            <tr>
+              <td>Дата</td>
+              <td class="font-weight-bold">{{ getFormattedDate(cryatlonOrder.date) }}</td>
+            </tr>
+            </tbody>
+          </v-simple-table>
+          <h6 class="pa-4 text-h6">Участники</h6>
+          <orders-table :orders="cryatlonOrder.orders" hide-status/>
+        </v-card>
         <!--  RACES -->
         <v-card
             v-for="(raceOrder, index) in raceOrders"
@@ -101,6 +128,7 @@ import { getGenderText } from "@/utils/members";
 import { getFormattedDate } from "@/utils/time";
 import { RaceOrders } from "./interfaces/race-orders.interface";
 import { RelayOrders } from "./interfaces/relay-orders.interface";
+import { CryatlonOrders } from "./interfaces/cryatlon-orders.interface";
 import OrdersTable from "@/components/OrdersTable.vue";
 import CustomCard from "@/components/CutomCard.vue"
 
@@ -118,6 +146,7 @@ export default Vue.extend({
         name: '',
         description: null
       },
+      cryatlonOrders: [] as CryatlonOrders[],
       raceOrders: [] as RaceOrders[],
       relayOrders: [] as RelayOrders[]
     }
@@ -137,18 +166,20 @@ export default Vue.extend({
     getFormattedDate,
     async loadCompetitionOrdersData(competitionId: number) {
       try {
-        const { data: competitionOrders } = await Competitions.getCompetitionOrders(competitionId)
-        const { id, name, description, races, relays } = competitionOrders
+        const { data: responseData } = await Competitions.getCompetitionOrders(competitionId)
+        const { data: competitionOrders } = responseData
+        const { id, name, description, cryatlons, races, relays } = competitionOrders
 
         this.competition.id = id
         this.competition.name = name
         this.competition.description = description
+        this.cryatlonOrders = cryatlons
         this.raceOrders = races
         this.relayOrders = relays
         this.isLoading = false
       }
-      catch (error) {
-        console.error(error)
+      catch (err) {
+        console.error(err)
       }
     }
   }

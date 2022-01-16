@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
+import store from '../store'
 
 Vue.use(VueRouter)
 
@@ -32,6 +33,12 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach(async (to, from, next) => {
+  await store.dispatch('competitions/fetchUpcomingCompetitions')
+
+  next()
 })
 
 export default router
