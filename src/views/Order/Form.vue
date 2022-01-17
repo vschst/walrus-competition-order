@@ -183,7 +183,7 @@
                     item-key="id"
                     show-select
                     class="elevation-1 mb-6"
-                    :items-per-page="5"
+                    :items-per-page="-1"
                 >
                   <template #item.swimming_style="{ item }">
                     {{ getSwimmingStyleText(item.swimming_style) }}
@@ -211,7 +211,7 @@
                     item-key="id"
                     show-select
                     class="elevation-1 mb-6"
-                    :items-per-page="5"
+                    :items-per-page="-1"
                 >
                   <template #item.swimming_style="{ item }">
                     {{ getSwimmingStyleText(item.swimming_style) }}
@@ -232,7 +232,7 @@
                     :items="filteredCryatlons"
                     item-key="id"
                     class="elevation-1 mb-6"
-                    :items-per-page="5"
+                    :items-per-page="-1"
                     single-select
                     show-select
                 >
@@ -255,7 +255,7 @@
                     :items="filteredAquatlons"
                     item-key="id"
                     class="elevation-1 mb-6"
-                    :items-per-page="5"
+                    :items-per-page="-1"
                     single-select
                     show-select
                 >

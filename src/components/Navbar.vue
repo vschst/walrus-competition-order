@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar color="indigo" dark app>
+  <v-app-bar color="indigo" class="overflow-x-auto" absolute dark app>
     <v-row justify="center" align="center" class="fill-height">
       <v-toolbar-items>
         <v-menu v-for="competition in upcomingCompetitions" :key="competition.id" offset-y>
@@ -54,9 +54,6 @@ export default Vue.extend({
   name: "Navbar",
   computed: {
     ...mapGetters('competitions', ['upcomingCompetitions'])
-  },
-  mounted() {
-    this.$el.classList.add('overflow-x-auto')
   }
 })
 </script>

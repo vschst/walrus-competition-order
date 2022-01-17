@@ -4,8 +4,8 @@
         class="text-center"
         cols="12"
     >
-      <div class="d-flex justify-center flex-row">
-        <div class="mr-16 font-weight-bold">
+      <div class="d-flex flex-wrap justify-center flex-row">
+        <div class="mr-md-16 font-weight-bold">
           <strong>©</strong> <a href="https://gitlab.com/walrus-project/walrus-competition-api" target="_blank" class="text-decoration-none">
             Система регистрации на соревнования
           </a> v{{ buildVersion }}

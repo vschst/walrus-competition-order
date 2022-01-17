@@ -3,6 +3,6 @@ module.exports = {
     'vuetify'
   ],
   publicPath: process.env.NODE_ENV === 'production'
-      ? '/cryatlon/'
+      ? process.env.VUE_APP_PUBLIC_PATH
       : '/'
 }
