@@ -168,7 +168,7 @@
                   class="mb-6"
                   v-bind="attrs"
                   v-on="on"
-              >Добавить участие</v-btn>
+              >Дистанции</v-btn>
             </template>
             <v-card class="pa-4">
               <template v-if="hasRacesDistances">
