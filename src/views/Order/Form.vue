@@ -525,7 +525,7 @@ export default Vue.extend({
     filteredRaces(this: any) {
       return this.races.filter((race: Race) => {
         return (race.gender === 'all' || race.gender === this.gender) &&
-            (this.isParaSwimmer ? this.isParaSwimmer === race.para_swimmers : true) &&
+            (this.isParaSwimmer === race.para_swimmers) &&
             ((this.birthdate && race.min_age) ? (this.age >= race.min_age) : true) &&
             ((this.birthdate && race.max_age) ? (this.age <= race.max_age) : true)
       })

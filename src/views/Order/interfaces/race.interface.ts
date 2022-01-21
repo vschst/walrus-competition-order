@@ -6,6 +6,6 @@ export interface Race {
     gender: string;
     min_age: null | number;
     max_age: null | number;
-    para_swimmers: false;
+    para_swimmers: boolean;
     date: string;
 }
