@@ -11,7 +11,7 @@
           </a> v{{ buildVersion }}
         </div>
         <div>
-          <a href="https://t.me/viktormath" target="_blank" class="font-weight-bold text-decoration-none" style="color: #757575">Обратная связь с разработчиком</a>
+          <a href="https://t.me/vschst" target="_blank" class="font-weight-bold text-decoration-none" style="color: #757575">Обратная связь с разработчиком</a>
         </div>
       </div>
     </v-col>

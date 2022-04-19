@@ -158,6 +158,10 @@
               hide-default-footer
               disable-pagination
           />
+          <v-checkbox
+              v-model="isSwimmingWithDophins"
+              label="Участвую в заплыве с дельфинами"
+          />
           <v-dialog
               v-model="distanceDialog"
               max-width="1100"
@@ -508,6 +512,7 @@ export default Vue.extend({
       ],
       aquatlonsSelected: [] as Aquatlon[],
       aquatlons: [] as Aquatlon[],
+      isSwimmingWithDophins: false,
       additional: '',
       isOrderCreating: false,
       showAlert: false
@@ -607,15 +612,14 @@ export default Vue.extend({
       this.isLoading = true
 
       try {
-        const { data: responseData } = await Competitions.getCompetitionData(competitionId)
-        const { data: competition } = responseData
-        const { name, races, relays, cryatlons, aquatlons } = competition
+        const { data: competition } = await Competitions.getCompetitionData(competitionId)
+        const { name, races, relays, cryathlons, aquathlons } = competition
 
         this.competitionName = name
         this.races = races
         this.relays = relays
-        this.cryatlons = cryatlons
-        this.aquatlons = aquatlons
+        this.cryatlons = cryathlons
+        this.aquatlons = aquathlons
         this.isLoading = false
       } catch (err) {
         console.error(err)
@@ -642,20 +646,24 @@ export default Vue.extend({
           ...(this.phone && { phone: this.phone }),
           ...(this.isSelectedRaces && { races: this.racesSelected.map((race: Race) => race.id)}),
           ...(this.isSelectedRelays && { relays: this.relaysSelected.map((relay: Relay) => relay.id) }),
-          ...(this.isSelectedCryatlons && { cryatlons: this.cryatlonsSelected.map((cryatlon: Cryatlon) => cryatlon.id) }),
-          ...(this.isSelectedAquatlons && { aquatlons: this.aquatlonsSelected.map((aquatlon: Aquatlon) => aquatlon.id) }),
-          ...(this.additional && { additional: this.additional })
+          ...(this.isSelectedCryatlons && { cryathlons: this.cryatlonsSelected.map((cryatlon: Cryatlon) => cryatlon.id) }),
+          ...(this.isSelectedAquatlons && { aquathlons: this.aquatlonsSelected.map((aquatlon: Aquatlon) => aquatlon.id) }),
+          ...((this.additional || this.isSwimmingWithDophins) && { 
+            additional: this.isSwimmingWithDophins ? `Участвую в заплыве c дельфинами\n${this.additional}` : this.additional
+          })
         }
 
         try {
           const { status } = await Orders.createOrder(payload)
 
           if (status === 200) {
-            this.isOrderCreating = false
             this.$root.$emit('onOrderCreatedSuccessfully')
           }
         } catch (err) {
+          console.log(err)
           this.showAlert = true;
+        } finally {
+          this.isOrderCreating = false
         }
       }
     },

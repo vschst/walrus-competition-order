@@ -19,6 +19,13 @@ export default Vue.extend({
       isOrderCreated: false
     }
   },
+  watch: {
+    '$route': function() {
+      if (this.isOrderCreated) {
+        this.isOrderCreated = false
+      }
+    }
+  },
   mounted() {
     this.$root.$on('onOrderCreatedSuccessfully', () => {
       this.isOrderCreated = true

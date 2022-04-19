@@ -63,8 +63,7 @@ export default Vue.extend({
         const competition = Array.from<UpcomingCompetition>(this.upcomingCompetitions).find(upcomingCompetition => upcomingCompetition.id === competitionId)
 
         if (competition) {
-          const { data: responseData } = await Orders.getPublicOrders(competitionId)
-          const { data: orders } = responseData
+          const { data: orders } = await Orders.getCompetitionOrders(competitionId)
           const { id, name, description } = competition
 
           this.competition.id = id

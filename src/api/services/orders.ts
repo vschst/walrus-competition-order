@@ -11,14 +11,14 @@ const createOrder = async (data: CreateOrderDTO) => {
     );
 }
 
-const getPublicOrders = async (competitionId: number) => {
+const getCompetitionOrders = async (competitionId: number) => {
     return await axiosService.request({
-        url: `/orders/public/${competitionId}`,
+        url: `/orders/competition/${competitionId}`,
         method: 'GET'
     })
 }
 
 export default {
     createOrder,
-    getPublicOrders
+    getCompetitionOrders
 }

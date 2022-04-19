@@ -18,8 +18,7 @@ export default {
     actions: {
         async fetchUpcomingCompetitions({ commit }) {
             try {
-                const { data: responseData } = await Competitions.getUpcomingCompetitions()
-                const { data: competitions } = responseData
+                const { data: competitions } = await Competitions.getUpcomingCompetitions()
 
                 commit('SET_UPCOMING_COMPETITIONS', competitions)
             } catch (err) {

@@ -2,7 +2,7 @@ import { axiosService } from "../axios";
 
 const getUpcomingCompetitions = async () => {
     return await axiosService.request({
-        url: '/competitions/public/upcoming',
+        url: '/competitions/upcoming',
         method: 'GET'
     })
 }
@@ -14,9 +14,9 @@ const getCompetitionData = async (competitionId: number) => {
     })
 }
 
-const getCompetitionOrders = async (competitionId: number) => {
+const getCompetitionProtocols = async (competitionId: number) => {
     return await axiosService.request({
-        url: `/competitions/public/orders/${competitionId}`,
+        url: `/competitions/protocols/${competitionId}`,
         method: 'GET'
     })
 }
@@ -24,5 +24,5 @@ const getCompetitionOrders = async (competitionId: number) => {
 export default {
     getUpcomingCompetitions,
     getCompetitionData,
-    getCompetitionOrders
+    getCompetitionProtocols
 }

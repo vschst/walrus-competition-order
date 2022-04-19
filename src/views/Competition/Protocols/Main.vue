@@ -166,9 +166,8 @@ export default Vue.extend({
     getFormattedDate,
     async loadCompetitionOrdersData(competitionId: number) {
       try {
-        const { data: responseData } = await Competitions.getCompetitionOrders(competitionId)
-        const { data: competitionOrders } = responseData
-        const { id, name, description, cryatlons, races, relays } = competitionOrders
+        const { data: competitionProtocols } = await Competitions.getCompetitionProtocols(competitionId)
+        const { id, name, description, cryatlons, races, relays } = competitionProtocols
 
         this.competition.id = id
         this.competition.name = name
